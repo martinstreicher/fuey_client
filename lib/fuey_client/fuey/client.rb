@@ -13,7 +13,7 @@ module Fuey
       0
     rescue => caught
       if (caught.message =~ /is not configured/)
-        Log.write "[#{Config.server_name}]: Nothing configured."
+        Log.write "Nothing configured."
         return 0
       else
         Log.write caught.message

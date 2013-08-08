@@ -8,7 +8,9 @@ module Fuey
       end
 
       def execute
-        Net::Ping::External.new(@host).ping
+        result = Net::Ping::External.new(@host).ping
+        Log.write "Pinging #{@host} #{result ? 'failed' : 'succeeded'}."
+        result
       end
     end
   end

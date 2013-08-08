@@ -6,7 +6,7 @@ describe Fuey::Client do
     after(:each) { Fuey::Config.reload_configuration }
 
     context "when nothing is configured" do
-      Given { Fuey::Log.should_receive(:write).with("[rspec-test]: Nothing configured.") }
+      Given { Fuey::Log.should_receive(:write).with("Nothing configured.") }
       Given { Fuey::Config.test_with(no_inspections) }
       When  (:result) { Fuey::Client.new.run }
       Then  { expect( result ).to eql(0) }
