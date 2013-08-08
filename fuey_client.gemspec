@@ -11,10 +11,11 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Client for inspecting server state and reports it back to Fuey}
   spec.summary       = %q{Client for inspecting server state and reports it back to Fuey. Requires the Fuey web app to have any value.}
   spec.homepage      = "http://github.com/b2b2dot0/fuey_client"
-  spec.license       = ["MIT", "GPL-2"]
+  spec.licenses      = ["MIT", "GPL-2"]
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.default_executable = "fuey"
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 

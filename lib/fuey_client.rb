@@ -1,5 +1,6 @@
 require "fuey_client/version"
+require "fuey_client/fuey/client"
 
 module FueyClient
-  # Your code goes here...
+
 end
