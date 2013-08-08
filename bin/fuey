@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 require 'fuey_client'
 
-Fuey::Client.new.run
+Fuey::Client.new(ARGV[0]).run

@@ -2,6 +2,14 @@ require "spec_helper"
 
 describe Fuey::Client do
 
+  describe "#initialize" do
+    context "passing a configuration path" do
+      Given { Configurethis.should_receive(:root_path=).with('path/to/dir') }
+      When (:result) { Fuey::Client.new 'path/to/dir' }
+      Then { expect( result ).to be_a(Fuey::Client) }
+    end
+  end
+
   describe "#run" do
     after(:each) { Fuey::Config.reload_configuration }
 
@@ -40,14 +48,12 @@ describe Fuey::Client do
 
   def no_inspections
     {
-      "server_name" => 'rspec-test',
       "inspections" => {}
     }
   end
 
   def one_ping
     {
-      "server_name" => 'rspec-test',
       "inspections" => {
                         "pings" => [
                           ['test-server', '0.0.0.1']
@@ -58,7 +64,6 @@ describe Fuey::Client do
 
    def two_pings
     {
-      "server_name" => 'rspec-test',
       "inspections" => {
                         "pings" => [
                                     ['test-server', '0.0.0.1'],

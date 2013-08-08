@@ -5,6 +5,10 @@ require "net/ping"
 
 module Fuey
   class Client
+    def initialize(path_to_config_dir="")
+      Configurethis.root_path = path_to_config_dir
+    end
+
     def run
       Config.inspections.pings.map{|name, host| Inspections::Ping.new(name, host) }.each do |ping|
         ping.execute
