@@ -8,16 +8,19 @@ Gem::Specification.new do |spec|
   spec.version       = FueyClient::VERSION
   spec.authors       = ["Matt Snyder"]
   spec.email         = ["snyder2112@me.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.description   = %q{Client for inspecting server state and reports it back to Fuey}
+  spec.summary       = %q{Client for inspecting server state and reports it back to Fuey. Requires the Fuey web app to have any value.}
+  spec.homepage      = "http://github.com/b2b2dot0/fuey_client"
+  spec.license       = ["MIT", "GPL-2"]
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "configurethis"
+
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec-given", ">= 3.0.0"
 end
