@@ -5,11 +5,12 @@ module Fuey
     class Ping
       def initialize(name, host)
         @host = host
+        @name = name
       end
 
       def execute
         result = Net::Ping::External.new(@host).ping
-        Log.write "Pinging #{@host} #{result ? 'failed' : 'succeeded'}."
+        Log.write "[#{@name}] Pinging #{@host} #{result ? 'failed' : 'succeeded'}."
         result
       end
     end
