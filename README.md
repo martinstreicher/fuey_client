@@ -10,7 +10,7 @@ runs at an interval or write your own Ruby script to run it continually.
 
 Install the gem:
 
-    gem 'fuey_client'
+    $ gem install 'fuey_client'
 
 Copy and modify the example [config file](https://github.com/b2b2dot0/fuey_client/blob/master/config_example/fuey/config.yml).
 Place it where you would like to keep it and note the location. The file needs to be called `config.yml` and it needs to be in a directory called
