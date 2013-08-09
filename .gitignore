@@ -1,4 +1,4 @@
-*.gem
+fuey_client*.gem
 *.rbc
 .bundle
 .config
