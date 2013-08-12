@@ -7,5 +7,13 @@ inspections:
       - 'Google DNS'
       - '8.8.8.8'
     - 
-      = 'Localhost'
+      - 'Localhost'
       - '0.0.0.0'
+  vpns:
+    -
+      - 'VPN 1'
+      - '71.1.1.1'
+    -
+      - 'VPN 2'
+      - '9.0.1.2'
+  
