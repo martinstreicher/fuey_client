@@ -7,15 +7,17 @@ require "active_support"
 
 module Fuey
   class Client
-    def initialize(path_to_config_dir="", notifications=Config.notifications)
+    def initialize(path_to_config_dir="", notifications=nil)
       Configurethis.root_path = path_to_config_dir
 
+      notifications = Config.notifications if notifications.nil?
       setup_notifications notifications
     end
 
     def run
       Trace.all.each do |trace|
-        trace.run
+        output = trace.run
+        Log.write %([#{trace.name}] #{output})
       end
     end
 

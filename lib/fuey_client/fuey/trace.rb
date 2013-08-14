@@ -23,8 +23,12 @@ module Fuey
       end
     end
 
+    def to_s
+      %(#{name}: [#{steps.join(', ')}])
+    end
+
     def run
-      ActiveSupport::Notifications.instrument("run.Trace", {:trace => self}) do
+      ActiveSupport::Notifications.instrument("run.trace", {:trace => self.to_s}) do
         run, failed, current = 0, 0, ""
         steps.each do |step|
           run += 1

@@ -13,6 +13,10 @@ module Fuey
         Log.write "[#{@name}] Pinging #{@host} #{result ? 'succeeded' : 'failed'}."
         result
       end
+
+      def to_s
+        %(Ping #{name} #{host})
+      end
     end
   end
 end
