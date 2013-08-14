@@ -21,6 +21,23 @@ describe Fuey::Trace do
     end
   end
 
+  describe "running a trace" do
+    context "when the first step fails" do
+      Given (:step1) { double(Fuey::Inspections::Ping, :name => "step1", :execute => false) }
+      Given (:step2) { double(Fuey::Inspections::Ping) }
+      Given { step2.should_not_receive(:execute) }
+      When  (:result) { Fuey::Trace.new(:name => "trace1", :steps => [step1, step2]).run }
+      Then  { expect( result ).to eql(%[trace1 failed on step1. 2 steps, 1 executed, 1 failed.]) }
+    end
+
+    context "when all steps pass" do
+      Given (:step1) { double(Fuey::Inspections::Ping, :name => "step1", :execute => true) }
+      Given (:step2) { double(Fuey::Inspections::Ping, :name => "step2", :execute => true) }
+      When  (:result) { Fuey::Trace.new(:name => "trace1", :steps => [step1, step2]).run }
+      Then  { expect( result ).to eql(%[trace1 passed. 2 steps, 2 executed, 0 failed.]) }
+    end
+  end
+
   RSpec::Matchers.define :ping do |name|
     match do |actual|
       (actual.name == name) && (actual.host == @host)

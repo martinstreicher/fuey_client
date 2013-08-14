@@ -20,8 +20,24 @@ module Fuey
         end
         trace
       end
-
     end
 
+    def run
+      run, failed, current = 0, 0, ""
+      steps.each do |step|
+        run += 1
+        current = step.name
+        if step.execute
+        else
+          failed += 1
+          break
+        end
+      end
+      if failed == 0
+        %(#{name} passed. #{steps.size} steps, #{run} executed, #{failed} failed.)
+      else
+        %(#{name} failed on #{current}. #{steps.size} steps, #{run} executed, #{failed} failed.)
+      end
+    end
   end
 end
