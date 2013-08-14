@@ -1,4 +1,5 @@
 require "active_model"
+require "active_support"
 
 module Fuey
   class Trace
@@ -23,20 +24,22 @@ module Fuey
     end
 
     def run
-      run, failed, current = 0, 0, ""
-      steps.each do |step|
-        run += 1
-        current = step.name
-        if step.execute
-        else
-          failed += 1
-          break
+      ActiveSupport::Notifications.instrument("run.Trace", {:trace => self}) do
+        run, failed, current = 0, 0, ""
+        steps.each do |step|
+          run += 1
+          current = step.name
+          if step.execute
+          else
+            failed += 1
+            break
+          end
         end
-      end
-      if failed == 0
-        %(#{name} passed. #{steps.size} steps, #{run} executed, #{failed} failed.)
-      else
-        %(#{name} failed on #{current}. #{steps.size} steps, #{run} executed, #{failed} failed.)
+        if failed == 0
+          %(#{name} passed. #{steps.size} steps, #{run} executed, #{failed} failed.)
+        else
+          %(#{name} failed on #{current}. #{steps.size} steps, #{run} executed, #{failed} failed.)
+        end
       end
     end
   end
