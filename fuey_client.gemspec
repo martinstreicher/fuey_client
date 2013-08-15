@@ -13,6 +13,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "http://github.com/b2b2dot0/fuey_client"
   spec.licenses      = ["MIT", "GPL-2"]
 
+  spec.required_ruby_version = ">= 1.8.7"
+
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.default_executable = "fuey"
@@ -26,9 +28,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
-
-  #This line tells rubygems to look for an extension to install
-  spec.extensions = ["ext/mkrf_conf.rb"]
-  # These dependencies are installed based on the version of ruby installed
-  # rspec-given (Only compatible with Ruby > 1.9)
+  # Ruby version < 1.9.3 can't install rspec-given > 2.0
+  # spec.add_development_dependency "rspec-given", ">= 3.0.0"
 end
