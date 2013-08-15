@@ -1,10 +1,10 @@
 require "net/ping"
-require "active_model"
+require "fuey_client/fuey/model_initializer"
 
 module Fuey
   module Inspections
     class Ping
-      include ActiveModel::Model
+      include ModelInitializer
 
       attr_accessor :host, :name
 

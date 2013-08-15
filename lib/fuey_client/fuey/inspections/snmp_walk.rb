@@ -1,10 +1,10 @@
 require "fuey_client/fuey/inspections/support/shell_command"
-require "active_model"
+require "fuey_client/fuey/model_initializer"
 
 module Fuey
   module Inspections
     class SNMPWalk
-      include ActiveModel::Model
+      include ModelInitializer
 
       attr_accessor :name, :ip, :agent, :oid, :version, :community
 

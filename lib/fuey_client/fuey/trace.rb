@@ -1,9 +1,9 @@
-require "active_model"
+require "fuey_client/fuey/model_initializer"
 require "active_support"
 
 module Fuey
   class Trace
-    include ActiveModel::Model
+    include ModelInitializer
 
     attr_accessor :name, :steps
 
