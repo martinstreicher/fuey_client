@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Fuey::Inspections::SNMPWalk do
+  it_behaves_like "an inspection"
 
   describe "#execute" do
     Given (:name) { 'some-tunnel' }

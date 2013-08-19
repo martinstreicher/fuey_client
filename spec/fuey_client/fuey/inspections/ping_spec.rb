@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Fuey::Inspections::Ping do
+  it_behaves_like "an inspection"
+
   describe "#execute" do
     context "when the ping fails" do
       Given { Fuey::Log.should_receive(:write).with("[some-server] Pinging 172.0.0.1 failed.") }

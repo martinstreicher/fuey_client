@@ -8,11 +8,19 @@ notifications:
 traces:
   two_pings:
   - Ping:
-      name: Google
-      host: 8.8.8.8
+      name: "Google"
+      host: "8.8.8.8"
   - SNMPWalk:
       name: "VPNTunnel"
+      agent: "1.1.1.1"
       ip: "98.31.121.10"
       community: "public"
       oid: "1.1.0.2.0.1.9.4.131.9.2.7.7.1"
       version: "v1"  
+  - RFCPing:
+      ashost: "1.0.0.1"
+      sysnr: "00"
+      client: "400"
+      user: "chud"
+      passwd: "gobrowns"
+      lang: "EN"
