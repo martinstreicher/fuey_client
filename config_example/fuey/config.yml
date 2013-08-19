@@ -18,6 +18,7 @@ traces:
       oid: "1.1.0.2.0.1.9.4.131.9.2.7.7.1"
       version: "v1"  
   - RFCPing:
+      name: "SAP1"
       ashost: "1.0.0.1"
       sysnr: "00"
       client: "400"
