@@ -6,7 +6,7 @@ module Fuey
     class RFCPing
       include ModelInitializer
 
-      attr_accessor :ashost, :sysnr, :client, :user, :passwd, :lang
+      attr_accessor :name, :ashost, :sysnr, :client, :user, :passwd, :lang
 
       def execute
         Support::SAP.new(config).ping
