@@ -3,10 +3,8 @@ require "fuey_client/fuey/model_initializer"
 
 module Fuey
   module Inspections
-    class Ping
-      include ModelInitializer
-
-      attr_accessor :host, :name
+    class Ping < Fuey::Inspections::Inspection
+      attr_accessor :host
 
       def execute
         result = Net::Ping::External.new(@host).ping
@@ -16,6 +14,13 @@ module Fuey
 
       def to_s
         %(Ping #{name} #{host})
+      end
+
+      def status
+        {
+          :settings => host || "",
+          :statusMessage => ""
+        }.merge(super)
       end
     end
   end

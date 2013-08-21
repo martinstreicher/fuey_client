@@ -3,10 +3,8 @@ require "fuey_client/fuey/model_initializer"
 
 module Fuey
   module Inspections
-    class SNMPWalk
-      include ModelInitializer
-
-      attr_accessor :name, :ip, :agent, :oid, :version, :community
+    class SNMPWalk < Fuey::Inspections::Inspection
+      attr_accessor :ip, :agent, :oid, :version, :community
 
       def initialize(args)
         super(args)
@@ -19,6 +17,13 @@ module Fuey
         result = result =~ /#{@ip}/
         Log.write %([#{@name}] SNMPWalk for #{@ip} using #{@agent} #{result ? "succeeded" : "failed" }.)
         result
+      end
+
+      def status
+        {
+          :settings => snmp_walk_command,
+          :statusMessage => ""
+        }.merge(super)
       end
 
       def to_s

@@ -3,10 +3,8 @@ require "fuey_client/fuey/model_initializer"
 
 module Fuey
   module Inspections
-    class RFCPing
-      include ModelInitializer
-
-      attr_accessor :name, :ashost, :sysnr, :client, :user, :passwd, :lang
+    class RFCPing < Fuey::Inspections::Inspection
+      attr_accessor :ashost, :sysnr, :client, :user, :passwd, :lang
 
       def execute
         Support::SAP.new(config).ping
@@ -14,6 +12,13 @@ module Fuey
 
       def to_s
         %(RFC Ping #{ashost} with user #{user})
+      end
+
+      def status
+        {
+          :settings => config.reject{|k,v| k == 'passwd'},
+          :statusMessage => ""
+        }.merge(super)
       end
 
       def config
