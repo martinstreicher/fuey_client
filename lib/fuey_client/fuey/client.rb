@@ -1,9 +1,13 @@
 require "fuey_client/fuey/log"
+require "fuey_client/fuey/null_object"
 require "fuey_client/fuey/config"
 require "fuey_client/fuey/trace"
 require "fuey_client/fuey/inspections"
+require "fuey_client/fuey/reporters"
+
 require "net/ping"
 require "active_support"
+require "redis"
 
 module Fuey
   class Client
@@ -14,8 +18,13 @@ module Fuey
       setup_notifications notifications
     end
 
+    def reporter
+      @_reporter ||= Reporters::Redis.new
+    end
+
     def run
       Trace.all.each do |trace|
+        trace.add_observer reporter
         output = trace.run
         Log.write %([#{trace.name}] #{output})
       end

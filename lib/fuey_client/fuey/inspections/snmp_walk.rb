@@ -13,9 +13,11 @@ module Fuey
       end
 
       def execute
+        change_status_to "executing"
         result = Support::ShellCommand.new(snmp_walk_command).execute
         result = result =~ /#{@ip}/
         Log.write %([#{@name}] SNMPWalk for #{@ip} using #{@agent} #{result ? "succeeded" : "failed" }.)
+        change_status_to(result ? "passed" : "failed")
         result
       end
 

@@ -7,7 +7,10 @@ module Fuey
       attr_accessor :ashost, :sysnr, :client, :user, :passwd, :lang
 
       def execute
-        Support::SAP.new(config).ping
+        change_status_to "executing"
+        result = Support::SAP.new(config).ping
+        change_status_to(result ? "passed" : "failed")
+        result
       end
 
       def to_s

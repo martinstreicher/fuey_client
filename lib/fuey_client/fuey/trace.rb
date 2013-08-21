@@ -1,9 +1,11 @@
 require "fuey_client/fuey/model_initializer"
 require "active_support"
+require "observer"
 
 module Fuey
   class Trace
     include ModelInitializer
+    include Observable
 
     attr_accessor :name, :steps
 
@@ -16,8 +18,10 @@ module Fuey
       Config.traces.keys.map do |trace_name|
         trace = Trace.new :name => trace_name
         Config.traces.send(trace_name).each do |step|
-          inspection = ActiveSupport::Inflector.constantize %(Fuey::Inspections::#{step.keys.first})
-          trace.steps.push inspection.new(step.values.first)
+          inspection_class = ActiveSupport::Inflector.constantize %(Fuey::Inspections::#{step.keys.first})
+          inspection = inspection_class.new(step.values.first)
+          inspection.add_observer(trace)
+          trace.steps.push inspection
         end
         trace
       end
@@ -25,6 +29,18 @@ module Fuey
 
     def to_s
       %(#{name}: [#{steps.join(', ')}])
+    end
+
+    # Handle updates from inpsections via observation
+    def update(status)
+      changed
+      notify_observers(
+                       "fuey.trace.update",
+                       {
+                         :name => name,
+                         :status => "executing",
+                         :steps => [ status ]
+                       })
     end
 
     def run
