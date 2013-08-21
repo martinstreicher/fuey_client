@@ -1,7 +1,10 @@
+require "observer"
+
 module Fuey
   module Inspections
     class Inspection
       include ModelInitializer
+      include Observable
 
       attr_accessor :name
 
@@ -17,6 +20,13 @@ module Fuey
           :status => @_status
         }
       end
+
+      def change_status_to(new_status)
+        changed
+        @_status = new_status
+        notify_observers status
+      end
+      protected :change_status_to
     end
   end
 end
