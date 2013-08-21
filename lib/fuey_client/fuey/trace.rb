@@ -38,12 +38,21 @@ module Fuey
                        "fuey.trace.update",
                        {
                          :name => name,
-                         :status => "executing",
+                         :statusMessage => status[:statusMessage],
                          :steps => [ status ]
                        })
     end
 
     def run
+      changed
+      notify_observers(
+                       "fuey.trace.new",
+                       {
+                         :name => name,
+                         :statusMessage => "executing",
+                         :steps => steps.map(&:status)
+                       }
+                       )
       ActiveSupport::Notifications.instrument("run.trace", {:trace => self.to_s}) do
         run, failed, current = 0, 0, ""
         steps.each do |step|

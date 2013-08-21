@@ -14,13 +14,13 @@ module Fuey
           fld = conn.discover("RFC_PING")
           fl = fld.new_function_call
           fl.invoke
-          true
+          [true, "RFC Ping succeeded"]
         rescue Gem::LoadError
           Log.write %(Could not ping SAP instance. The sapnwrfc gem is not installed)
-          false
+          return [false, %(Could not RFC Ping because the sapnwrfc gem is not available)]
         rescue Exception => caught
           Log.write %(RFC Ping for #{@config['ashost']} failed due to #{caught})
-          return false
+          return [false, caught]
         ensure
           conn.close unless conn.nil?
         end

@@ -22,7 +22,7 @@ describe Fuey::Inspections::RFCPing do
   context "when the ping fails" do
     Given (:conn) { double Fuey::Inspections::Support::SAP }
     Given { Fuey::Inspections::Support::SAP.should_receive(:new).with(config).and_return(conn) }
-    Given { conn.stub(:ping).and_return(false) }
+    Given { conn.stub(:ping).and_return([false, "RFC Ping failure msg"]) }
     When  (:result) { rfc_ping.execute }
     Then  { expect( result ).to be_false }
   end
@@ -30,7 +30,7 @@ describe Fuey::Inspections::RFCPing do
   context "when the ping succeeds" do
     Given (:conn) { double Fuey::Inspections::Support::SAP }
     Given { Fuey::Inspections::Support::SAP.should_receive(:new).with(config).and_return(conn) }
-    Given { conn.stub(:ping).and_return(true) }
+    Given { conn.stub(:ping).and_return([true, ""]) }
     When  (:result) { rfc_ping.execute }
     Then  { expect( result ).to be_true }
   end

@@ -4,11 +4,11 @@ require "fuey_client/fuey/model_initializer"
 module Fuey
   module Inspections
     class RFCPing < Fuey::Inspections::Inspection
-      attr_accessor :ashost, :sysnr, :client, :user, :passwd, :lang
+      attr_accessor :ashost, :sysnr, :client, :user, :passwd, :lang, :message
 
       def execute
         change_status_to "executing"
-        result = Support::SAP.new(config).ping
+        result, message = Support::SAP.new(config).ping
         change_status_to(result ? "passed" : "failed")
         result
       end
@@ -20,7 +20,7 @@ module Fuey
       def status
         {
           :settings => config.reject{|k,v| k == 'passwd'},
-          :statusMessage => ""
+          :statusMessage => message || ""
         }.merge(super)
       end
 

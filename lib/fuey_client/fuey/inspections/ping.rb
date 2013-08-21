@@ -4,12 +4,11 @@ require "fuey_client/fuey/model_initializer"
 module Fuey
   module Inspections
     class Ping < Fuey::Inspections::Inspection
-      attr_accessor :host
+      attr_accessor :host, :result
 
       def execute
         change_status_to "executing"
         result = Net::Ping::External.new(@host).ping
-        Log.write "[#{@name}] Pinging #{@host} #{result ? 'succeeded' : 'failed'}."
         change_status_to(result ? "passed" : "failed")
         result
       end
@@ -18,10 +17,15 @@ module Fuey
         %(Ping #{name} #{host})
       end
 
+      def status_message
+        return "Pending ping for #{host}" if result.nil?
+         %(Pinging #{host} #{result ? 'succeeded' : 'failed'}.)
+      end
+
       def status
         {
           :settings => host || "",
-          :statusMessage => ""
+          :statusMessage => status_message
         }.merge(super)
       end
     end
