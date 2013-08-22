@@ -23,7 +23,7 @@ describe Fuey::Trace do
 
   describe "running a trace" do
     context "when the first step fails" do
-      Given (:step1) { double(Fuey::Inspections::Ping, :name => "step1", :execute => false, :status => {}) }
+      Given (:step1) { double(Fuey::Inspections::Ping, :name => "step1", :execute => nil, :failed? => true, :status => {}) }
       Given (:step2) { double(Fuey::Inspections::Ping, :status => {}) }
       Given { step2.should_not_receive(:execute) }
       When  (:result) { Fuey::Trace.new(:name => "trace1", :steps => [step1, step2]).run }
@@ -31,8 +31,8 @@ describe Fuey::Trace do
     end
 
     context "when all steps pass" do
-      Given (:step1) { double(Fuey::Inspections::Ping, :name => "step1", :execute => true, :status => {}) }
-      Given (:step2) { double(Fuey::Inspections::Ping, :name => "step2", :execute => true, :status => {}) }
+      Given (:step1) { double(Fuey::Inspections::Ping, :name => "step1", :execute => nil, :failed? => false, :status => {}) }
+      Given (:step2) { double(Fuey::Inspections::Ping, :name => "step2", :execute => nil, :failed? => false, :status => {}) }
       When  (:result) { Fuey::Trace.new(:name => "trace1", :steps => [step1, step2]).run }
       Then  { expect( result ).to eql(%[trace1 passed. 2 steps, 2 executed, 0 failed.]) }
     end

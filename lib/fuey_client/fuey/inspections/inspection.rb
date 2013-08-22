@@ -1,4 +1,5 @@
 require "observer"
+require "stately"
 
 module Fuey
   module Inspections
@@ -6,27 +7,43 @@ module Fuey
       include ModelInitializer
       include Observable
 
-      attr_accessor :name
+      attr_accessor :name, :state
 
-      def initialize(args)
-        super(args)
-        @_status = "pending"
+      stately :start => :pending, :attr => :state do
+        state :executed, :action => :execute  do
+          before_transition :do => :notify
+          after_transition :do => :notify
+          after_transition :do => :_execute
+        end
+        state :passed, :action => :pass do
+          after_transition :do => :notify
+        end
+        state :failed, :action => :fail do
+          after_transition :do => :notify
+        end
+      end
+
+      def passed?
+        state == 'passed'
+      end
+
+      def failed?
+        state == 'failed'
+      end
+
+      def notify
+        changed
+        notify_observers status
       end
 
       def status
         {
           :type => self.class.to_s.split('::').last,
           :name => name,
-          :status => @_status
+          :status => self.state
         }
       end
 
-      def change_status_to(new_status)
-        changed
-        @_status = new_status
-        notify_observers status
-      end
-      protected :change_status_to
     end
   end
 end

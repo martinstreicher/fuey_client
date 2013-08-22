@@ -13,17 +13,19 @@ module Fuey
         @status_message = ""
       end
 
-      def execute
-        change_status_to "executing"
+      def _execute
         response = Support::ShellCommand.new(snmp_walk_command).execute
         result = (response =~ /#{ip}/)
-        change_status_to(result ? "passed" : "failed")
-        result
+        if result
+          self.pass
+        else
+          self.fail
+        end
       end
 
       def status_message
-        return %(Pending #{snmp_walk_command}) if response.nil?
-        %(SNMPWalk #{@_status ? "passed" : "failed"} due to #{response})
+        return %(#{state} #{snmp_walk_command}) if response.nil?
+        %(SNMPWalk #{state}. #{response})
       end
 
       def status

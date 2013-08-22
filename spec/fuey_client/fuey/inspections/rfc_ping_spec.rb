@@ -23,15 +23,15 @@ describe Fuey::Inspections::RFCPing do
     Given (:conn) { double Fuey::Inspections::Support::SAP }
     Given { Fuey::Inspections::Support::SAP.should_receive(:new).with(config).and_return(conn) }
     Given { conn.stub(:ping).and_return([false, "RFC Ping failure msg"]) }
-    When  (:result) { rfc_ping.execute }
-    Then  { expect( result ).to be_false }
+    When  { rfc_ping.execute }
+    Then  { expect( rfc_ping ).to have_aborted }
   end
 
   context "when the ping succeeds" do
     Given (:conn) { double Fuey::Inspections::Support::SAP }
     Given { Fuey::Inspections::Support::SAP.should_receive(:new).with(config).and_return(conn) }
     Given { conn.stub(:ping).and_return([true, ""]) }
-    When  (:result) { rfc_ping.execute }
-    Then  { expect( result ).to be_true }
+    When  { rfc_ping.execute }
+    Then  { expect( rfc_ping ).to have_passed }
   end
 end

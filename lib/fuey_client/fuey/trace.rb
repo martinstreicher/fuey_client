@@ -58,8 +58,8 @@ module Fuey
         steps.each do |step|
           run += 1
           current = step.name
-          if step.execute
-          else
+          step.execute
+          if step.failed?
             failed += 1
             break
           end

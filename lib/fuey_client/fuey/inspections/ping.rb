@@ -6,26 +6,23 @@ module Fuey
     class Ping < Fuey::Inspections::Inspection
       attr_accessor :host, :result
 
-      def execute
-        change_status_to "executing"
+      def _execute
         result = Net::Ping::External.new(@host).ping
-        change_status_to(result ? "passed" : "failed")
-        result
+        if result
+          self.pass
+        else
+          self.fail
+        end
       end
 
       def to_s
         %(Ping #{name} #{host})
       end
 
-      def status_message
-        return "Pending ping for #{host}" if result.nil?
-         %(Pinging #{host} #{result ? 'succeeded' : 'failed'}.)
-      end
-
       def status
         {
           :settings => host || "",
-          :statusMessage => status_message
+          :statusMessage => %(#{state} ping for #{host}),
         }.merge(super)
       end
     end
