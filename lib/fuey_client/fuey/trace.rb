@@ -38,6 +38,7 @@ module Fuey
                        "fuey.trace.update",
                        {
                          :name => name,
+                         :status => status[:status],
                          :statusMessage => status[:statusMessage],
                          :steps => [ status ]
                        })
@@ -49,7 +50,8 @@ module Fuey
                        "fuey.trace.new",
                        {
                          :name => name,
-                         :statusMessage => "executing",
+                         :status => "executed",
+                         :statusMessage => "",
                          :steps => steps.map(&:status)
                        }
                        )
