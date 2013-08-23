@@ -1,5 +1,6 @@
 require "observer"
 require "stately"
+require "fuey_client/fuey/model_initializer"
 
 module Fuey
   module Inspections

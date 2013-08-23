@@ -1,5 +1,4 @@
 require "fuey_client/fuey/inspections/support/shell_command"
-require "fuey_client/fuey/model_initializer"
 
 module Fuey
   module Inspections

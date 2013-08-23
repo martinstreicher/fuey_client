@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Fuey::Client do
-  after(:each) { Fuey::Config.reload_configuration }
+  after(:each) { Fuey::Config::Fuey.reload_configuration }
 
   describe "#initialize" do
     context "passing a configuration path" do

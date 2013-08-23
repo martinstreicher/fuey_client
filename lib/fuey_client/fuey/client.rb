@@ -1,20 +1,18 @@
+require "fuey_client/fuey/config"
 require "fuey_client/fuey/log"
 require "fuey_client/fuey/null_object"
-require "fuey_client/fuey/config"
 require "fuey_client/fuey/trace"
 require "fuey_client/fuey/inspections"
 require "fuey_client/fuey/reporters"
 
-require "net/ping"
 require "active_support"
-require "redis"
 
 module Fuey
   class Client
     def initialize(path_to_config_dir="", notifications=nil)
       Configurethis.root_path = path_to_config_dir
 
-      notifications = Config.notifications if notifications.nil?
+      notifications = Config::Fuey.notifications if notifications.nil?
       setup_notifications notifications
     end
 

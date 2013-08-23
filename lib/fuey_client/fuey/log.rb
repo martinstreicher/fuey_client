@@ -1,10 +1,10 @@
-require "fuey_client/fuey/config"
+require "fuey_client/fuey/config/fuey"
 require 'logger'
 
 module Fuey
   class Log
     def self.write(message)
-      logger.info "[#{Config.title}] #{message}"
+      logger.info "[#{Config::Fuey.title}] #{message}"
     end
 
     # Handles ActiveSupport::Notifications
@@ -13,7 +13,7 @@ module Fuey
     end
 
     def self.logger
-      @@logger ||= Logger.new Config.logfile, 'daily'
+      @@logger ||= Logger.new Config::Fuey.logfile, 'daily'
     end
     private_class_method :logger
   end

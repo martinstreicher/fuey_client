@@ -15,9 +15,9 @@ module Fuey
     end
 
     def self.all
-      Config.traces.keys.map do |trace_name|
+      Config::Fuey.traces.keys.map do |trace_name|
         trace = Trace.new :name => trace_name
-        Config.traces.send(trace_name).each do |step|
+        Config::Fuey.traces.send(trace_name).each do |step|
           inspection_class = ActiveSupport::Inflector.constantize %(Fuey::Inspections::#{step.keys.first})
           inspection = inspection_class.new(step.values.first)
           inspection.add_observer(trace)

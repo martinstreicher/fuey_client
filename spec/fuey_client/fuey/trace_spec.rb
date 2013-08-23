@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe Fuey::Trace do
-  after(:each) { Fuey::Config.reload_configuration }
+  after(:each) { Fuey::Config::Fuey.reload_configuration }
 
   describe "retrieving all configured traces" do
     context "when configured for no traces" do
-      Given { Fuey::Config.test_with(no_traces) }
+      Given { Fuey::Config::Fuey.test_with(no_traces) }
       When  (:result) { Fuey::Trace.all }
       Then  { expect( result ).to be_empty }
     end
 
     context "when configured with one trace" do
-      Given { Fuey::Config.test_with(two_pings) }
+      Given { Fuey::Config::Fuey.test_with(two_pings) }
       When  (:result) { Fuey::Trace.all }
       Then  { expect( result ).to have(1).items }
       And   { expect( result.first ).to be_a(Fuey::Trace) }
