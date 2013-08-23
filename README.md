@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/b2b2dot0/fuey_client.png?branch=master)](https://travis-ci.org/b2b2dot0/fuey_client)
-[![Code Climate](https://codeclimate.com/repos/5203a52189af7e65a002c4a5/badges/6fe497d679e5e80d0770/gpa.png)](https://codeclimate.com/repos/5203a52189af7e65a002c4a5/feed)
+[![Code Climate](https://codeclimate.com/github/b2b2dot0/fuey_client.png)](https://codeclimate.com/github/b2b2dot0/fuey_client)
 
 # Fuey::Client
 
