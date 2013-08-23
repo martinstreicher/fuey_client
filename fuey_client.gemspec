@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "net-ping", "~> 1.6"
   spec.add_dependency "activesupport", "3.0.0"
   spec.add_dependency "redis"
-  spec.add_dependency "stately"
+  # spec.add_dependency "stately", :github => "git@github.com:mattsnyder/stately.git"
   # spec.add_dependency "b2b2dot0-sapnwrfc", "~> 0.26" # https://github.com/piersharding/ruby-sapnwrfc
 
   spec.add_development_dependency "bundler", "~> 1.3"
