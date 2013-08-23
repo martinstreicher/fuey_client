@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-gem "stately", :github => "mattsnyder/stately"
-
 # Specify your gem's dependencies in fuey_client.gemspec
 gemspec
 
