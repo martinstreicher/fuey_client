@@ -13,7 +13,7 @@ module Fuey
       end
 
       def _execute
-        response = Support::ShellCommand.new(snmp_walk_command).execute
+        @response = Support::ShellCommand.new(snmp_walk_command).execute
         result = (response =~ /#{ip}/)
         if result
           self.pass
@@ -23,7 +23,7 @@ module Fuey
       end
 
       def status_message
-        return %(#{state} #{snmp_walk_command}) if response.nil?
+        return %(SNMPWalk #{state} #{snmp_walk_command}) if @response.nil? || passed?
         %(SNMPWalk #{state}. #{response})
       end
 
