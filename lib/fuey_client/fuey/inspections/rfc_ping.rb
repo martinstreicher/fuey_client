@@ -6,7 +6,7 @@ module Fuey
       attr_accessor :ashost, :sysnr, :client, :user, :passwd, :lang, :response
 
       def _execute
-        result, response = Support::SAP.new(config).ping
+        result, @response = Support::SAP.new(config).ping
         if result
           self.pass
         else
@@ -15,13 +15,18 @@ module Fuey
       end
 
       def to_s
-        %(RFC Ping #{ashost} with user #{user})
+        %(RFCPing #{ashost} with user #{user})
+      end
+
+      def status_message
+        return %(RFCPing #{state} for #{ashost}. #{@response}) if failed?
+        %(RFCPing #{state} for #{ashost}.)
       end
 
       def status
         {
           :settings => config.reject{|k,v| k == 'passwd'},
-          :statusMessage => response || %(#{state} RFCPing for #{ashost})
+          :statusMessage => status_message
         }.merge(super)
       end
 

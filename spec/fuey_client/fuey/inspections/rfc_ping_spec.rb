@@ -25,6 +25,7 @@ describe Fuey::Inspections::RFCPing do
     Given { conn.stub(:ping).and_return([false, "RFC Ping failure msg"]) }
     When  { rfc_ping.execute }
     Then  { expect( rfc_ping ).to have_aborted }
+    And   { expect( rfc_ping.status_message ).to end_with("RFC Ping failure msg") }
   end
 
   context "when the ping succeeds" do
@@ -33,5 +34,6 @@ describe Fuey::Inspections::RFCPing do
     Given { conn.stub(:ping).and_return([true, ""]) }
     When  { rfc_ping.execute }
     Then  { expect( rfc_ping ).to have_passed }
+    And   { expect( rfc_ping.status_message ).to eql("RFCPing passed for 1.0.0.1.") }
   end
 end
