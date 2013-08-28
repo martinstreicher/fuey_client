@@ -18,7 +18,8 @@ module Fuey
         rescue Gem::LoadError
           return [false, %(Could not RFC Ping because the sapnwrfc gem is not available)]
         rescue Exception => caught
-          return [false, caught.message]
+          return [false, caught.error] if caugh.responds_to?(:error) #SAP errors
+          [false, caught.inspect]
         ensure
           conn.close unless conn.nil?
         end
