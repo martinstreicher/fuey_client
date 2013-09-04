@@ -21,6 +21,43 @@ describe Fuey::Trace do
     end
   end
 
+  #     Given (:inspection_key) { "my_trace-ping_google-20130804120031" }
+  #     Time::DATE_FORMATS[:key]  = "%Y%m%d%H%M%S"
+  describe "receiving updates from inspections" do
+    context "when update is reporting it passed" do
+      Given (:trace) { Fuey::Trace.new(:name => "My Trace") }
+      Given { Fuey::InspectionRepository.should_receive(:add).with("My Trace", status_update).and_return "inspection_key" }
+      When (:status_update) {
+        {
+          :name => 'Ping Google', :status => 'passed', :statusMessage => 'Ping passed.', :type => 'Ping', :settings => '8.8.8.8'
+        }
+      }
+      Then  { expect( trace.update(status_update) ).to be_true }
+    end
+
+    context "when update is reporting it executed" do
+      Given (:trace) { Fuey::Trace.new(:name => "My Trace") }
+      Given { Fuey::InspectionRepository.should_not_receive(:add) }
+      When (:status_update) {
+        {
+          :name => 'Ping Google', :status => 'executed', :statusMessage => 'Ping executed.', :type => 'Ping', :settings => '8.8.8.8'
+        }
+      }
+      Then  { expect( trace.update(status_update) ).to be_true }
+    end
+
+    context "when update is reporting it failed" do
+      Given (:trace) { Fuey::Trace.new(:name => "My Trace") }
+      Given { Fuey::InspectionRepository.should_receive(:add).with("My Trace", status_update).and_return "inspection_key" }
+      When (:status_update) {
+        {
+          :name => 'Ping Google', :status => 'failed', :statusMessage => 'Ping failed.', :type => 'Ping', :settings => '8.8.8.8'
+        }
+      }
+      Then  { expect( trace.update(status_update) ).to be_true }
+    end
+  end
+
   describe "running a trace" do
     context "when the first step fails" do
       Given (:step1) { double(Fuey::Inspections::Ping, :name => "step1", :execute => nil, :failed? => true, :status => {}) }
@@ -63,21 +100,21 @@ describe Fuey::Trace do
   def two_pings
     {
       "traces" => {
-                   "two_pings" =>
-                   [
-                    {
-                      "Ping" => {
-                        "name" => "Google",
-                        "host" => "8.8.8.8"
-                      }
-                    },
-                    {
-                      "Ping" => {
-                        "name" => "Self",
-                        "host" => "172.0.0.1"
-                      }
-                    }
-                   ]
+        "two_pings" =>
+        [
+         {
+           "Ping" => {
+             "name" => "Google",
+             "host" => "8.8.8.8"
+           }
+         },
+         {
+           "Ping" => {
+             "name" => "Self",
+             "host" => "172.0.0.1"
+           }
+         }
+        ]
       }
     }
   end

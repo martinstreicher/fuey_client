@@ -1,3 +1,4 @@
+require "fuey_client/fuey/inspection_repository"
 require "fuey_client/fuey/model_initializer"
 require "fuey_client/fuey/reporters"
 require "active_support"
@@ -40,15 +41,17 @@ module Fuey
 
     # Handle updates from inpsections via observation
     def update(status)
+      update = {
+        :name => name,
+        :status => status[:status],
+        :statusMessage => status[:statusMessage],
+        :steps => [ status ]
+      }
+
       changed
-      notify_observers(
-                       "fuey.trace.update",
-                       {
-                         :name => name,
-                         :status => status[:status],
-                         :statusMessage => status[:statusMessage],
-                         :steps => [ status ]
-                       })
+      notify_observers "fuey.trace.update", update
+      InspectionRepository.add name, status if (status[:status] == 'passed' || status[:status] == 'failed')
+      true
     end
 
     def run
