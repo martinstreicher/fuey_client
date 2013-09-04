@@ -18,55 +18,41 @@ describe Fuey::Inspections::Inspection do
     end
   end
 
+  class InspectionObserver
+    def initialize(inspection)
+      @inspection = inspection
+      @inspection.add_observer self
+    end
 
-  describe "execution" do
-    describe "with an observer" do
-      Given(:subscriber) { double "Observer", :update => nil }
-      Given { subscriber.
-        should_receive(:update).
-        with({
-               :type => inspection.class.to_s,
-               :name => 'Example',
-               :status => 'pending'
-             }) }
-      Given { subscriber.
-        should_receive(:update).
-        with({
-               :type => inspection.class.to_s,
-               :name => 'Example',
-               :status => 'executed'
-             }) }
+    def update; end
 
-      context "when it fails" do
-        Given(:inspection) { failed_inspection.new({ :name => 'Example' }) }
-        Given { inspection.add_observer subscriber }
-
-        Given { subscriber.
-          should_receive(:update).
+    def expects_notification_of(*states)
+      states.each do |state|
+        self.should_receive(:update).
           with({
-                 :type => inspection.class.to_s,
-                 :name => 'Example',
-                 :status => 'failed'
-               }) }
-
-        When  { inspection.execute }
-        Then  { expect( inspection ).to be_failed }
+                 :type => @inspection.class.to_s,
+                 :name => @inspection.name,
+                 :status => state
+               })
       end
+    end
+  end
 
-      context "when it passes" do
-        Given(:inspection) { successful_inspection.new({ :name => 'Example' }) }
-        Given { inspection.add_observer subscriber }
+  describe "observing execution" do
+    context "when it fails" do
+      Given(:inspection) { failed_inspection.new({ :name => 'Example' }) }
+      Given(:subscriber) { InspectionObserver.new(inspection) }
+      Given { subscriber.expects_notification_of('pending', 'executed', 'failed') }
+      When  { inspection.execute }
+      Then  { expect( inspection ).to be_failed }
+    end
 
-        Given { subscriber.
-          should_receive(:update).
-          with({
-                 :type => inspection.class.to_s,
-                 :name => 'Example',
-                 :status => 'passed'
-               }) }
-        When  { inspection.execute }
-        Then  { expect( inspection ).to be_passed }
-      end
+    context "when it passes" do
+      Given(:inspection) { successful_inspection.new({ :name => 'Example' }) }
+      Given(:subscriber) { InspectionObserver.new(inspection) }
+      Given { subscriber.expects_notification_of('pending', 'executed', 'passed') }
+      When  { inspection.execute }
+      Then  { expect( inspection ).to be_passed }
     end
   end
 
@@ -74,8 +60,7 @@ describe Fuey::Inspections::Inspection do
     Given (:inspection) { Fuey::Inspections::Inspection.new }
 
     context "initially" do
-      Then { expect( successful_inspection.new.state ).to eql('pending') }
-      Then { expect( failed_inspection.new.state ).to eql('pending') }
+      Then { expect( inspection.state ).to eql('pending') }
     end
 
     context "when the inspection passes" do
