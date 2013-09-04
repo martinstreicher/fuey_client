@@ -1,4 +1,3 @@
-
 require "redis"
 require "json"
 
@@ -10,6 +9,7 @@ module Fuey
                                 :host => Config::Redis.host,
                                 :port => Config::Redis.port )
       end
+      private :redis
 
       # Handles update from observable
       def update(channel, message)

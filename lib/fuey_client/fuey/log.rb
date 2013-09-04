@@ -7,9 +7,13 @@ module Fuey
       logger.info "[#{Config::Fuey.title}] #{message}"
     end
 
+    def self.alert(message)
+      logger.error "[#{Config::Fuey.title}] #{message}"
+    end
+
     # Handles ActiveSupport::Notifications
     def call(name, started, finished, unique_id, payload)
-      Fuey::Log.write %([Event #{name}] Completed in #{finished - started} seconds. #{payload})
+      Fuey::Log.write %([#{name}] Completed in #{finished - started} seconds. #{payload})
     end
 
     def self.logger

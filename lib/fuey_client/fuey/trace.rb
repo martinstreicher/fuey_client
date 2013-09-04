@@ -1,6 +1,8 @@
 require "fuey_client/fuey/model_initializer"
+require "fuey_client/fuey/reporters"
 require "active_support"
 require "observer"
+
 
 module Fuey
   class Trace
@@ -21,10 +23,15 @@ module Fuey
           inspection_class = ActiveSupport::Inflector.constantize %(Fuey::Inspections::#{step.keys.first})
           inspection = inspection_class.new(step.values.first)
           inspection.add_observer(trace)
+          inspection.add_observer(error_logger)
           trace.steps.push inspection
         end
         trace
       end
+    end
+
+    def self.error_logger
+      @@error_logger ||= Fuey::Reporters::ErrorLogger.new
     end
 
     def to_s
