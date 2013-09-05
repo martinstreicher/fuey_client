@@ -1,10 +1,6 @@
 require "json"
 require "fuey_client/fuey/redis"
-
-
-#     Given (:inspection_key) { "my_trace-ping_google-20130804120031" }
-#     Time::DATE_FORMATS[:key]  = "%Y%m%d%H%M%S"
-
+require "fuey_client/fuey/inspections/key"
 
 module Fuey
   module Reporters
@@ -13,7 +9,6 @@ module Fuey
         @_redis = redis
       end
 
-      # Handles update from observable
       def update(type, trace_name, statuses)
         self.send("publish_#{type}", trace_name, statuses)
         true
