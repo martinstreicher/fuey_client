@@ -40,34 +40,17 @@ module Fuey
     end
 
     # Handle updates from inpsections via observation
-    def update(step_status)
+    def update(status)
       changed
-      notify_observers "fuey.trace.update", wrap_with_trace(step_status)
-      InspectionRepository.add(name, step_status) if step_status[:status] =~ /passed|failed/
+      notify_observers :update, name, [status]
+      InspectionRepository.add(name, status) if status.passed? || status.failed?
       true
     end
 
-    def wrap_with_trace(status)
-      {
-        :name => name,
-        :status => status[:status],
-        :statusMessage => status[:statusMessage],
-        :steps => [ status ]
-      }
-    end
-    private :wrap_with_trace
-
     def run
       changed
-      notify_observers(
-                       "fuey.trace.new",
-                       {
-                         :name => name,
-                         :status => "executed",
-                         :statusMessage => "",
-                         :steps => steps.map(&:status)
-                       }
-                       )
+      notify_observers :new, name, steps.map(&:status)
+
       ActiveSupport::Notifications.instrument("run.trace", {:trace => self.to_s}) do
         run, failed, current = 0, 0, ""
         steps.each do |step|

@@ -17,7 +17,25 @@ module Fuey
       private :instance
 
       # Handles update from observable
-      def update(channel, message)
+      def update(type, trace_name, statuses)
+        if type == :new
+          channel = "fuey.trace.new"
+          message = {
+            :name => trace_name,
+            :status => "executed",
+            :statusMessage => "",
+            :steps => statuses.map(&:attributes)
+          }
+        else
+          channel = "fuey.trace.update"
+          message = {
+            :name => trace_name,
+            :status => statuses.first.status,
+            :statusMessage => statuses.first.status,
+            :steps => statuses.map(&:attributes)
+          }
+        end
+
         instance.publish channel, message.to_json
       end
     end
