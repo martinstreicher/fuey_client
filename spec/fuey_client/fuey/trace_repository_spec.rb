@@ -21,6 +21,28 @@ describe Fuey::TraceRepository do
     end
   end
 
+  RSpec::Matchers.define :ping do |name|
+    match do |actual|
+      (actual.name == name) && (actual.host == @host)
+    end
+
+    chain :at do |host|
+      @host = host
+    end
+
+    failure_message_for_should do
+      %(should have pinged #{name} at #{@host}, but was #{actual.name} and #{actual.host})
+    end
+
+    failure_message_for_should_not do
+      %(should not have pinged #{actual.host})
+    end
+
+    description do
+      %(should ping #{name} at #{@host})
+    end
+  end
+
   def two_pings
     {
       "traces" => {
