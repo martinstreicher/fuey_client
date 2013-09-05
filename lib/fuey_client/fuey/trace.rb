@@ -4,36 +4,36 @@ require "fuey_client/fuey/reporters"
 require "active_support"
 require "observer"
 
-
 module Fuey
   class Trace
     include ModelInitializer
     include Observable
 
-    attr_accessor :name, :steps
+    attr_accessor :name
 
     def initialize(args)
       super(args)
-      @steps ||= Array.new
     end
 
-    def self.all
-      Config::Fuey.traces.keys.map do |trace_name|
-        trace = Trace.new :name => trace_name
-        Config::Fuey.traces.send(trace_name).each do |step|
-          inspection_class = ActiveSupport::Inflector.constantize %(Fuey::Inspections::#{step.keys.first})
-          inspection = inspection_class.new(step.values.first)
-          inspection.add_observer(trace)
-          inspection.add_observer(error_logger)
-          trace.steps.push inspection
-        end
-        trace
-      end
+    def receiver=(observer)
+      add_observer observer
     end
 
-    def self.error_logger
-      @@error_logger ||= Fuey::Reporters::ErrorLogger.new
+    def add_step(inspection)
+      inspection.add_observer(self)
+      inspection.add_observer(error_logger)
+      steps.push inspection
+      inspection
     end
+
+    def steps
+      @_steps ||= Array.new
+    end
+
+    def error_logger
+      @_error_logger ||= Fuey::Reporters::ErrorLogger.new
+    end
+    private :error_logger
 
     def to_s
       %(#{name}: [#{steps.join(', ')}])

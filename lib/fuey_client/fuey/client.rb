@@ -4,6 +4,7 @@ require "fuey_client/fuey/null_object"
 require "fuey_client/fuey/trace"
 require "fuey_client/fuey/inspections"
 require "fuey_client/fuey/reporters"
+require "fuey_client/fuey/trace_repository"
 
 require "active_support"
 
@@ -21,8 +22,8 @@ module Fuey
     end
 
     def run
-      Trace.all.each do |trace|
-        trace.add_observer reporter
+      TraceRepository.new.all.each do |trace|
+        trace.receiver = reporter
         output = trace.run
         Log.write %([#{trace.name}] #{output})
       end
