@@ -1,5 +1,5 @@
-require "redis"
 require "json"
+require "fuey_client/fuey/redis"
 
 
 #     Given (:inspection_key) { "my_trace-ping_google-20130804120031" }
@@ -8,13 +8,10 @@ require "json"
 
 module Fuey
   module Reporters
-    class Redis
-      def instance
-        @@redis ||= ::Redis.new(
-                                :host => Config::Redis.host,
-                                :port => Config::Redis.port )
+    class NotificationQueue
+      def initialize(redis)
+        @_redis = redis
       end
-      private :instance
 
       # Handles update from observable
       def update(type, trace_name, statuses)
@@ -36,7 +33,7 @@ module Fuey
           }
         end
 
-        instance.publish channel, message.to_json
+        @_redis.publish channel, message.to_json
       end
     end
   end

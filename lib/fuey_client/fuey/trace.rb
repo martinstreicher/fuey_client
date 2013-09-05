@@ -43,7 +43,7 @@ module Fuey
     def update(status)
       changed
       notify_observers :update, name, [status]
-      InspectionRepository.add(name, status) if status.passed? || status.failed?
+      InspectionRepository.add(name, status) if status.passed? || status.failed? ## Move to add_step ?????
       true
     end
 

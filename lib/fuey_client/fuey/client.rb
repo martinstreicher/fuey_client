@@ -18,7 +18,7 @@ module Fuey
     end
 
     def reporter
-      @_reporter ||= Reporters::Redis.new
+      @_reporter ||= Reporters::NotificationQueue.new(Fuey::Redis.instance)
     end
 
     def run
