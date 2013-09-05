@@ -1,32 +1,6 @@
 require 'spec_helper'
 
 describe Fuey::Trace do
-  after(:each) { Fuey::Config::Fuey.reload_configuration }
-
-  def successful_inspection
-    Class.new(Fuey::Inspections::Inspection) do
-      def _execute
-        self.pass
-      end
-
-      def add_observer(observer)
-        # dont observe
-      end
-    end
-  end
-
-  def failed_inspection
-    Class.new(Fuey::Inspections::Inspection) do
-      def _execute
-        self.fail
-      end
-
-      def add_observer(observer)
-        # dont observe
-      end
-    end
-  end
-
   describe "receiving updates from inspections" do
     context "when update is reporting it passed" do
       Given (:trace) { Fuey::Trace.new(:name => "My Trace") }
@@ -103,5 +77,28 @@ describe Fuey::Trace do
     end
   end
 
+  def successful_inspection
+    Class.new(Fuey::Inspections::Inspection) do
+      def _execute
+        self.pass
+      end
+
+      def add_observer(observer)
+        # dont observe
+      end
+    end
+  end
+
+  def failed_inspection
+    Class.new(Fuey::Inspections::Inspection) do
+      def _execute
+        self.fail
+      end
+
+      def add_observer(observer)
+        # dont observe
+      end
+    end
+  end
 
 end

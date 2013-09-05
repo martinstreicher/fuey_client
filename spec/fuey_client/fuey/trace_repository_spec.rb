@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe Fuey::TraceRepository do
-   describe "retrieving all configured traces" do
+  after(:each) { Fuey::Config::Fuey.reload_configuration }
+
+  describe "retrieving all configured traces" do
     context "when configured for no traces" do
       Given { Fuey::Config::Fuey.test_with(no_traces) }
       When  (:result) { Fuey::TraceRepository.new.all }
