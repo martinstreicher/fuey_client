@@ -1,4 +1,3 @@
-require "fuey_client/fuey/inspection_repository"
 require "fuey_client/fuey/model_initializer"
 require "fuey_client/fuey/reporters"
 require "active_support"
@@ -43,8 +42,15 @@ module Fuey
     def update(status)
       changed
       notify_observers :update, name, [status]
-      InspectionRepository.add(name, status) if status.passed? || status.failed? ## Move to add_step ?????
       true
+    end
+
+    def status
+      @_current ? @_current.state : "pending"
+    end
+
+    def status_message
+      @_current.failed? ? @_current.status_message : ""
     end
 
     def run
@@ -52,20 +58,22 @@ module Fuey
       notify_observers :new, name, steps.map(&:status)
 
       ActiveSupport::Notifications.instrument("run.trace", {:trace => self.to_s}) do
-        run, failed, current = 0, 0, ""
+        run, failed, @_current = 0, 0, nil
         steps.each do |step|
           run += 1
-          current = step.name
+          @_current = step
           step.execute
           if step.failed?
             failed += 1
             break
           end
         end
+
+        notify_observers :complete, self
         if failed == 0
           %(#{name} passed. #{steps.size} steps, #{run} executed, #{failed} failed.)
         else
-          %(#{name} failed on #{current}. #{steps.size} steps, #{run} executed, #{failed} failed.)
+          %(#{name} failed on #{@_current.name}. #{steps.size} steps, #{run} executed, #{failed} failed.)
         end
       end
     end

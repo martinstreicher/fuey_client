@@ -1,35 +1,6 @@
 require 'spec_helper'
 
 describe Fuey::Trace do
-  describe "receiving updates from inspections" do
-    context "when update is reporting it passed" do
-      Given (:trace) { Fuey::Trace.new(:name => "My Trace") }
-      Given { Fuey::InspectionRepository.should_receive(:add).with("My Trace", status_update).and_return "inspection_key" }
-      When (:status_update) {
-          Fuey::Inspections::Support::Status.new :name => 'Ping Google', :status => 'passed', :status_message => 'Ping passed.', :type => 'Ping', :settings => '8.8.8.8'
-      }
-      Then  { expect( trace.update(status_update) ).to be_true }
-    end
-
-    context "when update is reporting it executed" do
-      Given (:trace) { Fuey::Trace.new(:name => "My Trace") }
-      Given { Fuey::InspectionRepository.should_not_receive(:add) }
-      When (:status_update) {
-        Fuey::Inspections::Support::Status.new :name => 'Ping Google', :status => 'executed', :status_message => 'Ping executed.', :type => 'Ping', :settings => '8.8.8.8'
-      }
-      Then  { expect( trace.update(status_update) ).to be_true }
-    end
-
-    context "when update is reporting it failed" do
-      Given (:trace) { Fuey::Trace.new(:name => "My Trace") }
-      Given { Fuey::InspectionRepository.should_receive(:add).with("My Trace", status_update).and_return "inspection_key" }
-      When (:status_update) {
-        Fuey::Inspections::Support::Status.new :name => 'Ping Google', :status => 'failed', :status_message => 'Ping failed.', :type => 'Ping', :settings => '8.8.8.8'
-      }
-      Then  { expect( trace.update(status_update) ).to be_true }
-    end
-  end
-
   describe "running a trace" do
     context "when the first step fails" do
       Given  (:trace) { Fuey::Trace.new :name => "trace1" }

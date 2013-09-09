@@ -1,6 +1,5 @@
 require "json"
 require "fuey_client/fuey/redis"
-require "fuey_client/fuey/inspections/key"
 
 module Fuey
   module Reporters
@@ -9,22 +8,37 @@ module Fuey
         @_redis = redis
       end
 
-      def update(type, trace_name, statuses)
-        self.send("publish_#{type}", trace_name, statuses)
+      def update(type, *args)
+        self.send("publish_#{type}", args)
         true
       end
 
-      def publish_update(trace_name, statuses)
-        message = [ trace_name, statuses.first.attributes ]
+      def publish_update(args)
+        trace_name, statuses = args[0], args[1]
+        status = statuses.first
+        message = [ trace_name, status.attributes ]
         @_redis.publish "fuey.trace.update", message.to_json
       end
 
-      def publish_new(trace_name, statuses)
+      def publish_complete(args)
+        trace = args.first
         message = {
-            :name => trace_name,
-            :status => "executed",
-            :status_message => "",
-            :steps => statuses.map(&:attributes)
+          :time => Time.now.strftime("%Y%m%d%H%M%S"),
+          :name => trace.name,
+          :status => trace.status,
+          :status_message => trace.status_message,
+          :steps => steps.map(&:status).map(&:attributes)
+        }
+        Fuey::Redis.instance.lpush trace.name.downcase, trace.as_message.to_json
+      end
+
+      def publish_new(args)
+        trace_name, statuses = args[0], args[1]
+        message = {
+          :name => trace_name,
+          :status => "executed",
+          :status_message => "",
+          :steps => statuses.map(&:attributes)
         }
         @_redis.publish "fuey.trace.new", message.to_json
       end
