@@ -27,9 +27,9 @@ module Fuey
           :name => trace.name,
           :status => trace.status,
           :status_message => trace.status_message,
-          :steps => steps.map(&:status).map(&:attributes)
+          :steps => trace.steps.map(&:status).map(&:attributes)
         }
-        Fuey::Redis.instance.lpush trace.name.downcase, trace.as_message.to_json
+        @_redis.lpush trace.name.downcase, message.to_json
       end
 
       def publish_new(args)

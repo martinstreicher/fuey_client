@@ -69,6 +69,7 @@ module Fuey
           end
         end
 
+        changed
         notify_observers :complete, self
         if failed == 0
           %(#{name} passed. #{steps.size} steps, #{run} executed, #{failed} failed.)
